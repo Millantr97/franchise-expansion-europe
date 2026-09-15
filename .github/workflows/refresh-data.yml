@@ -21,7 +21,6 @@ jobs:
   refresh:
   
     runs-on: ubuntu-latest
-    
     steps:
     
       - uses: actions/checkout@v4
@@ -31,6 +30,8 @@ jobs:
         with: {python-version: '3.12'}
         
       - run: python scripts/refresh_observed.py
+      
+      - run: python scripts/fix_site.py
       
       - run: |
       
@@ -43,6 +44,7 @@ jobs:
           git diff --cached --quiet || git commit -m 'data: refresh observed city inputs'
           
           git push
+
 
 
 
