@@ -1,0 +1,62 @@
+name: Refresh observed city data
+
+on:
+
+  push:
+  
+    paths: ['.github/workflows/refresh-data.yml','scripts/*.py']
+    
+  schedule:
+  
+    - cron: '57 5 * * 1'
+    
+  workflow_dispatch:
+  
+permissions:
+
+  contents: write
+  
+jobs:
+
+  refresh:
+  
+    runs-on: ubuntu-latest
+    
+    steps:
+    
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-python@v5
+      
+        with: {python-version: '3.12'}
+        
+      - run: python scripts/refresh_observed.py
+      
+      - run: |
+      
+          git config user.name github-actions[bot]
+          
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          
+          git add scripts data index.html
+          
+          git diff --cached --quiet || git commit -m 'data: refresh observed city inputs'
+          
+          git push
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
