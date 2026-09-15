@@ -1,0 +1,13 @@
+{
+  "fetched_at": "2026-09-15T19:21:53.604001+00:00",
+  "source": "Eurostat dissemination API",
+  "base_cities": 64,
+  "cities_with_observed_population": 18,
+  "coverage_pct": 28.1,
+  "ok": true,
+  "validation": {
+    "method": "coverage + range + source-date checks",
+    "holdout": "Rank sensitivity checked by excluding each observed input; estimated cost/ease remain explicitly labelled and must not be treated as observed."
+  },
+  "sha256": "b811779760ff322581ae74528dcb47c587558cd2cdf0d3f16b369457a5083273"
+}
