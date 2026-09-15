@@ -16,11 +16,14 @@ permissions:
 
   contents: write
   
+  issues: write
+  
 jobs:
 
   refresh:
   
     runs-on: ubuntu-latest
+    
     steps:
     
       - uses: actions/checkout@v4
@@ -33,6 +36,8 @@ jobs:
       
       - run: python scripts/fix_site.py
       
+      - run: python scripts/check_alerts.py
+      
       - run: |
       
           git config user.name github-actions[bot]
@@ -41,9 +46,35 @@ jobs:
           
           git add scripts data index.html
           
-          git diff --cached --quiet || git commit -m 'data: refresh observed city inputs'
+          git diff --cached --quiet || git commit -m 'data: automated refresh'
           
           git push
+          
+      - if: failure()
+      
+        env:
+        
+          GH_TOKEN: ${{ github.token }}
+          
+        run: |
+        
+          title='Data pipeline alert'
+          
+          body="Automated refresh or validation failed: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          
+          existing=$(gh issue list --state open --search "$title in:title" --json number --jq '.[0].number // empty')
+          
+          if [ -n "$existing" ]; then gh issue comment "$existing" --body "$body"; else gh issue create --title "$title" --body "$body"; fi
+
+
+
+
+
+
+
+
+
+
 
 
 
